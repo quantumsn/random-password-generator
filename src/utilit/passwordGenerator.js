@@ -16,7 +16,7 @@ let passwordGenerator = (length, isAllowedNum, IsAllowedChar) => {
     }
 
     if (i < strSize) {
-      let idx = Math.floor(Math.random() * strSize);
+      let idx = Math.floor(Math.random() * str.length);
       pass += str.charAt(idx);
     }
 

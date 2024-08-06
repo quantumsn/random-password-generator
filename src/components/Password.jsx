@@ -1,14 +1,24 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import passwordGenerator from "../utilit/passwordGenerator";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Slider from "@mui/material/Slider";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
-function inputFeild() {
+export default function inputFeild() {
+  let [password, setPassword] = useState("");
+  let [isNumberAllowed, setNumberAllowed] = useState(false);
+  let [isCharAllowed, setCharAllowed] = useState(false);
+  let [length, setLength] = useState(8);
+
+  useEffect(
+    () =>
+      setPassword(passwordGenerator(length, isNumberAllowed, isCharAllowed)),
+    [isNumberAllowed, length, isCharAllowed]
+  );
+
   return (
     <>
       <h2>Password Generator</h2>
@@ -34,9 +44,11 @@ function inputFeild() {
             backgroundColor: "wheat",
             padding: "0 10px",
             boxSizing: "border-box",
+            color: "black",
           }}
           variant="outlined"
           readOnly
+          value={password}
         />
         <Button
           sx={{ p: "12px", outline: "none" }}
@@ -60,19 +72,26 @@ function inputFeild() {
         </label>
 
         <Slider
-          defaultValue={8}
+          value={length}
           aria-label="Default"
           valueLabelDisplay="auto"
           min={4}
           max={50}
           sx={{ width: 100, marginRight: 3 }}
+          onChange={(event) => setLength(event.target.value)}
         />
 
-        <FormControlLabel control={<Checkbox />} label="Numbers" />
-        <FormControlLabel control={<Checkbox />} label="Characters" />
+        <FormControlLabel
+          control={<Checkbox />}
+          label="Numbers"
+          onClick={() => setNumberAllowed(!isNumberAllowed)}
+        />
+        <FormControlLabel
+          control={<Checkbox />}
+          label="Characters"
+          onClick={() => setCharAllowed(!isCharAllowed)}
+        />
       </Paper>
     </>
   );
 }
-
-export default inputFeild;
