@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import passwordGenerator from "../utilit/passwordGenerator";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -13,11 +13,18 @@ export default function inputFeild() {
   let [isCharAllowed, setCharAllowed] = useState(false);
   let [length, setLength] = useState(8);
 
+  let passwordRef = useRef(null);
+
   useEffect(
     () =>
       setPassword(passwordGenerator(length, isNumberAllowed, isCharAllowed)),
     [isNumberAllowed, length, isCharAllowed]
   );
+
+  let copyPassOnClip = useCallback(() => {
+    passwordRef.current?.select();
+    window.navigator.clipboard.writeText(password);
+  }, [password]);
 
   return (
     <>
@@ -45,15 +52,18 @@ export default function inputFeild() {
             padding: "0 10px",
             boxSizing: "border-box",
             color: "black",
+            fontSize: 28,
           }}
           variant="outlined"
           readOnly
           value={password}
+          ref={passwordRef}
         />
         <Button
           sx={{ p: "12px", outline: "none" }}
           color="secondary"
           variant="contained"
+          onClick={copyPassOnClip}
         >
           Copy
         </Button>
@@ -77,17 +87,18 @@ export default function inputFeild() {
           valueLabelDisplay="auto"
           min={4}
           max={50}
+          color="secondary"
           sx={{ width: 100, marginRight: 3 }}
           onChange={(event) => setLength(event.target.value)}
         />
 
         <FormControlLabel
-          control={<Checkbox />}
+          control={<Checkbox color="secondary" style={{ color: "#a523ac" }} />}
           label="Numbers"
           onClick={() => setNumberAllowed(!isNumberAllowed)}
         />
         <FormControlLabel
-          control={<Checkbox />}
+          control={<Checkbox color="secondary" style={{ color: "#a523ac" }} />}
           label="Characters"
           onClick={() => setCharAllowed(!isCharAllowed)}
         />
